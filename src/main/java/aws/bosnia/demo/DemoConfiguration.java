@@ -2,13 +2,19 @@ package aws.bosnia.demo;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.model.BillingMode;
+import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
 
 @Configuration
 @EnableDynamoDBRepositories
@@ -27,12 +33,16 @@ public class DemoConfiguration {
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
         AmazonDynamoDB amazonDynamoDB
-                = new AmazonDynamoDBClient(amazonAWSCredentials());
+                = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.EU_CENTRAL_1)
+                .enableEndpointDiscovery()
+                .build();
 
-        if (!StringUtils.isEmpty(amazonDynamoDBEndpoint)) {
-            amazonDynamoDB.setEndpoint(amazonDynamoDBEndpoint);
-        }
-
+        DynamoDBMapper dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
+        CreateTableRequest tableRequest = dynamoDBMapper
+                .generateCreateTableRequest(Demo.class);
+        tableRequest.setBillingMode(BillingMode.PAY_PER_REQUEST.toString());
+        TableUtils.createTableIfNotExists(amazonDynamoDB, tableRequest);
         return amazonDynamoDB;
     }
 
