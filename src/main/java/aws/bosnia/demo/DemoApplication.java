@@ -19,9 +19,8 @@ public class DemoApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Demo demo = new Demo(UUID.randomUUID().toString());
+        Demo demo = new Demo();
         repository.save(demo);
-
         repository.findAll().forEach(System.out::println);
     }
 }
