@@ -5,22 +5,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.Resource;
-import java.util.UUID;
 
 @SpringBootApplication
-public class DemoApplication implements CommandLineRunner {
+public class BookApplication implements CommandLineRunner {
 
     @Resource
-    private DemosRepository repository;
+    private BookRepository repository;
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(BookApplication.class, args);
     }
 
     @Override
     public void run(String... args) {
-        Demo demo = new Demo();
-        repository.save(demo);
-        repository.findAll().forEach(System.out::println);
+        Book demo = new Book();
+//        int count = 0;
+//        repository.save(demo);
+//        repository.findAll().forEach(System.out::println);
     }
 }
