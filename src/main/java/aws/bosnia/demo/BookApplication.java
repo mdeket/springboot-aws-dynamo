@@ -18,9 +18,8 @@ public class BookApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Book demo = new Book();
-//        int count = 0;
-//        repository.save(demo);
-//        repository.findAll().forEach(System.out::println);
+        Book demo = new Book("Problem spinoza");
+        repository.save(demo);
+        repository.findAll().forEach(System.out::println);
     }
 }
