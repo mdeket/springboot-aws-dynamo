@@ -1,5 +1,5 @@
 FROM openjdk:8
-EXPOSE 8081
+EXPOSE 80
 COPY . /app
 WORKDIR /app
 RUN ./mvnw package
